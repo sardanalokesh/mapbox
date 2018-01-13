@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		Google Maps - Cluster
+	</title>
+	<style>
+		#map {
+		  height: 100%;
+		}
+
+		html, body {
+		  height: 100%;
+		  margin: 0;
+		  padding: 0;
+		}
+	</style>
+	<script
+	  src="https://code.jquery.com/jquery-3.2.1.min.js"
+	  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	  crossorigin="anonymous"></script>
+</head>
+<body>
+	<div id="map"></div>
+	<script>
+		function initMap() {
+
+		  var map = new google.maps.Map(document.getElementById('map'), {
+		    zoom: 7,
+		    center: {lat: 42.996612, lng: -76.014404}, //"42.996612", "-76.014404"
+		    styles: mapStyles
+		  });
+		  $.getJSON("NY.geojson", function(geojson) {
+		  		let a = Math.random();
+		  		map.data.addGeoJson(geojson);
+		  		map.data.setStyle(function(feature) {
+		  			let a = Math.random();
+		  			return {
+				        fillColor: a < 0.3 ? "transparent" : a > 0.8 ? "#ff0000" : "#ffff00",
+				        fillOpacity: 0.6,
+				        strokeColor: "#666",
+				        strokeWeight: 1
+				    };
+		  		});
+		  });
+		}
+
+		var mapStyles = [{
+		  "featureType": "water",
+		  "elementType": "all",
+		  "stylers": [{
+		    "visibility": "simplified"
+		  }, {
+		    "hue": "#e9ebed"
+		  }, {
+		    "saturation": -78
+		  }, {
+		    "lightness": 67
+		  }]
+		}, {
+		  "featureType": "landscape",
+		  "elementType": "all",
+		  "stylers": [{
+		    "visibility": "simplified"
+		  }, {
+		    "hue": "#ffffff"
+		  }, {
+		    "saturation": -100
+		  }, {
+		    "lightness": 100
+		  }]
+		}, {
+		  "featureType": "road",
+		  "elementType": "geometry",
+		  "stylers": [{
+		    "visibility": "simplified"
+		  }, {
+		    "hue": "#bbc0c4"
+		  }, {
+		    "saturation": -93
+		  }, {
+		    "lightness": 31
+		  }]
+		}, {
+		  "featureType": "poi",
+		  "elementType": "all",
+		  "stylers": [{
+		    "visibility": "off"
+		  }, {
+		    "hue": "#ffffff"
+		  }, {
+		    "saturation": -100
+		  }, {
+		    "lightness": 100
+		  }]
+		}, {
+		  "featureType": "road.local",
+		  "elementType": "geometry",
+		  "stylers": [{
+		    "visibility": "simplified"
+		  }, {
+		    "hue": "#e9ebed"
+		  }, {
+		    "saturation": -90
+		  }, {
+		    "lightness": -8
+		  }]
+		}, {
+		  "featureType": "transit",
+		  "elementType": "all",
+		  "stylers": [{
+		    "visibility": "on"
+		  }, {
+		    "hue": "#e9ebed"
+		  }, {
+		    "saturation": 10
+		  }, {
+		    "lightness": 69
+		  }]
+		}, {
+		  "featureType": "administrative.locality",
+		  "elementType": "all",
+		  "stylers": [{
+		    "visibility": "on"
+		  }, {
+		    "hue": "#2c2e33"
+		  }, {
+		    "saturation": 7
+		  }, {
+		    "lightness": 19
+		  }]
+		}, {
+		  "featureType": "road",
+		  "elementType": "labels",
+		  "stylers": [{
+		    "visibility": "on"
+		  }, {
+		    "hue": "#bbc0c4"
+		  }, {
+		    "saturation": -93
+		  }, {
+		    "lightness": 31
+		  }]
+		}, {
+		  "featureType": "road.arterial",
+		  "elementType": "labels",
+		  "stylers": [{
+		    "visibility": "simplified"
+		  }, {
+		    "hue": "#bbc0c4"
+		  }, {
+		    "saturation": -93
+		  }, {
+		    "lightness": -2
+		  }]
+		}];
+	</script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGHsGSZivFWuEL8CK8yJUKP0juH7gvfM0&callback=initMap">
+	</script>
+</body>
+</html>

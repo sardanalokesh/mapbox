@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>
+        Mapbox - Cluster
+    </title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+
+<div id='map'></div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1Ijoic2FyZGFuYWxva2VzaCIsImEiOiJjamM0bWYyMzgwd2ZrMndtbTFjODB6bjhsIn0.fgzXP2ZCimQUDOoSjabWWA';
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v9',
+    center: [-76.014404,42.996612], //lat: 42.996612, lng: -76.014404
+    zoom: 6 
+});
+map.addControl(new mapboxgl.NavigationControl());
+
+map.on('load', function() {
+
+    $.getJSON("NY.geojson", function(geojson) {
+        let dataSets = {
+            "cat1": [],
+            "cat2": [],
+            "cat3": [],
+        };
+
+        geojson.features.forEach(feature => {
+            if (Math.random() < 0.3)
+                dataSets.cat1.push(feature);
+            else if (Math.random() > 0.8)
+                dataSets.cat2.push(feature);
+            else
+                dataSets.cat3.push(feature);
+        });
+        map.addLayer({
+                "id": "geojson-cat1",
+                "type": "fill",
+                "source": {
+                    "type": "geojson",
+                    "data": {
+                        type: "FeatureCollection",
+                        features: dataSets.cat1
+                    }
+                },
+                "paint": {
+                    "fill-color": "rgba(0,0,0,0)",
+                    "fill-opacity": 0.6,
+                    "fill-outline-color": "#000",
+                }
+        });
+        map.addLayer({
+                "id": "geojson-cat2",
+                "type": "fill",
+                "source": {
+                    "type": "geojson",
+                    "data": {
+                        type: "FeatureCollection",
+                        features: dataSets.cat2
+                    }
+                },
+                "paint": {
+                    "fill-color": "#ff0000",
+                    "fill-opacity": 0.6,
+                    "fill-outline-color": "#000",
+                }
+        });
+        map.addLayer({
+                "id": "geojson-cat3",
+                "type": "fill",
+                "source": {
+                    "type": "geojson",
+                    "data": {
+                        type: "FeatureCollection",
+                        features: dataSets.cat3
+                    }
+                },
+                "paint": {
+                    "fill-color": "#ffff00",
+                    "fill-opacity": 0.6,
+                    "fill-outline-color": "#000",
+                }
+        });
+        /*geojson.features.filter(f => !!f.geometry).forEach(feature => {
+            let a = Math.random();
+            map.addLayer({
+                "id": feature.properties.ZCTA5CE10,
+                "type": "fill",
+                "source": {
+                    "type": "geojson",
+                    "data": feature
+                },
+                "paint": {
+                    "fill-color": a < 0.3 ? "rgba(0,0,0,0)" : a > 0.8 ? "#ff0000" : "#ffff00",
+                    "fill-opacity": 0.6,
+                    "fill-outline-color": "#666",
+                }
+            });
+        });*/
+    });
+
+
+    /*map.addLayer({
+        "id": "zip",
+        "type": "fill",
+        "source": "NY-zips",
+        "paint": {
+            "fill-color": "#888888",
+            "fill-opacity": 0.4
+        },
+        "filter": ["==", "$type", "Polygon"]
+    });*/
+
+});
+</script>
+
+</body>
+</html>

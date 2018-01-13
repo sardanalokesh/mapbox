@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>
+        Mapbox - Cluster
+    </title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+
+<div id='map'></div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1Ijoic2FyZGFuYWxva2VzaCIsImEiOiJjamM0bWYyMzgwd2ZrMndtbTFjODB6bjhsIn0.fgzXP2ZCimQUDOoSjabWWA';
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v9',
+    center: [-98.585522,37.8333333],
+    zoom: 3
+});
+map.addControl(new mapboxgl.NavigationControl());
+
+map.on('load', function() {
+
+    map.addSource("dataPoints", {
+        type: "geojson",
+        data: "data.geojson",
+        cluster: true,
+        clusterMaxZoom: 14,
+        clusterRadius: 55
+    });
+
+    map.addLayer({
+        id: "clusters",
+        type: "circle",
+        source: "dataPoints",
+        filter: ["has", "point_count"],
+        paint: {
+            "circle-color": {
+                property: "point_count",
+                type: "interval",
+                stops: [
+                    [0, "rgba(24, 143, 251, 0.8)"],
+                    [10, "rgba(253, 190, 44, 0.8)"],
+                    [100, "rgba(255, 0, 0, 0.8)"],
+                ]
+            },
+            "circle-radius": {
+                property: "point_count",
+                type: "interval",
+                stops: [
+                    [0, 10],
+                    [10, 15],
+                    [100, 20]
+                ]
+            }
+        }
+    });
+
+    map.addLayer({
+        id: "cluster-count",
+        type: "symbol",
+        source: "dataPoints",
+        filter: ["has", "point_count"],
+        layout: {
+            "text-field": "{point_count_abbreviated}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 12
+        }
+    });
+
+    map.addLayer({
+        id: "unclustered-point",
+        type: "circle",
+        source: "dataPoints",
+        filter: ["!has", "point_count"],
+        paint: {
+            "circle-color": "#ea6793",
+            "circle-radius": 5,
+            "circle-stroke-width": 1,
+            "circle-stroke-color": "#fff"
+        }
+    });
+});
+</script>
+
+</body>
+</html>
